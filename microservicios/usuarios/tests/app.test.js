@@ -10,7 +10,7 @@ describe('Pruebas del Microservicio de Usuarios', () => {
   test('GET /health debe responder correctamente', async () => {
     const response = await request(app).get('/health');
     expect(response.statusCode).toBe(200);
-    expect(response.body.servicio).toBe('usuarios-error');
+    expect(response.body.servicio).toBe('usuarios');
   });
 
   test('GET /usuarios debe devolver una lista de usuarios', async () => {
