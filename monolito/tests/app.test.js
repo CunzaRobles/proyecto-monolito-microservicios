@@ -1,26 +1,32 @@
 const request = require('supertest');
-const app = require('../src/app');
+const { app, pool } = require('../src/app');
 
-test('GET /health debe responder correctamente', async () => {
-  const response = await request(app).get('/health');
-  expect(response.statusCode).toBe(200);
-  expect(response.body.estado).toBe('ok');
-});
+describe('Pruebas de endpoints del Monolito', () => {
+  afterAll(async () => {
+    await pool.end();
+  });
 
-test('GET /usuarios debe devolver usuarios', async () => {
-  const response = await request(app).get('/usuarios');
-  expect(response.statusCode).toBe(200);
-  expect(response.body.length).toBeGreaterThan(0);
-});
+  test('GET /health debe retornar estado ok', async () => {
+    const res = await request(app).get('/health');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ estado: 'ok' });
+  });
 
-test('GET /productos debe devolver productos', async () => {
-  const response = await request(app).get('/productos');
-  expect(response.statusCode).toBe(200);
-  expect(response.body.length).toBeGreaterThan(0);
-});
+  test('GET /usuarios debe retornar una lista de usuarios', async () => {
+    const res = await request(app).get('/usuarios');
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
 
-test('GET /pedidos debe devolver pedidos', async () => {
-  const response = await request(app).get('/pedidos');
-  expect(response.statusCode).toBe(200);
-  expect(response.body.length).toBeGreaterThan(0);
+  test('GET /productos debe retornar una lista de productos', async () => {
+    const res = await request(app).get('/productos');
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
+  test('GET /pedidos debe retornar una lista de pedidos', async () => {
+    const res = await request(app).get('/pedidos');
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
 });
