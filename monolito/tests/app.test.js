@@ -1,9 +1,12 @@
 const request = require('supertest');
-const { app, pool } = require('../src/app');
+const app = require('../src/app');
+const pool = require('../src/db');
 
 describe('Pruebas de endpoints del Monolito', () => {
   afterAll(async () => {
-    await pool.end();
+    if (pool && pool.end) {
+      await pool.end();
+    }
   });
 
   test('GET /health debe retornar estado ok', async () => {
